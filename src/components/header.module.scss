@@ -1,0 +1,42 @@
+$lightBlue: #1BA098;
+$darkBlue: #051622;
+
+.container {
+    height: 10rem;
+    margin-bottom: 5rem;   
+    padding-top: 2rem;
+    padding-left: 2rem;  
+}
+
+.nav-list {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: $darkBlue;
+}
+
+.nav-item {
+    color: $lightBlue;
+    margin-right: 1px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    float: left;
+    display: block;
+    padding: 14px 16px;  
+}
+
+.nav-item:hover {
+    color: $darkBlue;
+    background-color: $lightBlue;
+}
+
+.active-nav-item {
+    color: $darkBlue;
+    background-color: $lightBlue;
+}
+
+.h1 {
+    font-size: 5rem;
+}

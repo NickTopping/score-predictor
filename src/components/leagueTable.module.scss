@@ -1,0 +1,16 @@
+$lightBlue: #1BA098;
+$darkBlue: #051622;
+$yellow: #DEB992;
+
+.tableHeader {
+    color: $yellow !important;
+    background-color: $darkBlue !important;
+    border-bottom: 0px !important;
+}
+
+.row {
+    color: $darkBlue;
+    background-color: $lightBlue;
+    border-bottom: 1px solid $darkBlue;   
+    font-weight: bold;
+}

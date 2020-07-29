@@ -1,0 +1,38 @@
+[
+    {
+        "homeTeamId": "1",
+        "homeTeamName": "Arsenal",
+        "fixtures": [
+         {"fixtureId": "1", "awayTeamId": "2", "awayTeamName": "Liverpool", "homeGoals": "1", "awayGoals": "2"},
+         {"fixtureId": "2", "awayTeamId": "3", "awayTeamName": "Manchester City", "homeGoals": "0", "awayGoals": "4"}, 
+         {"fixtureId": "3", "awayTeamId": "4", "awayTeamName": "Manchester United", "homeGoals": "0", "awayGoals": "1"}
+         ]
+    },
+    {
+        "homeTeamId": "2", 
+        "homeTeamName": "Liverpool",
+         "fixtures": [
+         {"fixtureId": "4", "awayTeamId": "1", "awayTeamName": "Arsenal", "homeGoals": "3", "awayGoals": "0"},  
+         {"fixtureId": "5", "awayTeamId": "4", "awayTeamName": "Manchester United", "homeGoals": "1", "awayGoals": "1"}, 
+         {"fixtureId": "6", "awayTeamId": "3", "awayTeamName": "Manchester City", "homeGoals": "2", "awayGoals": "1"}
+         ] 
+    },
+    {
+        "homeTeamId": "3", 
+        "homeTeamName": "Manchester City",
+         "fixtures": [
+         {"fixtureId": "7", "awayTeamId": "4", "awayTeamName": "Manchester United", "homeGoals": "3", "awayGoals": "1"},  
+         {"fixtureId": "8", "awayTeamId": "1", "awayTeamName": "Arsenal", "homeGoals": "3", "awayGoals": "0"}, 
+         {"fixtureId": "9", "awayTeamId": "2", "awayTeamName": "Liverpool", "homeGoals": "4", "awayGoals": "1"}
+         ] 
+    },
+    {
+        "homeTeamId": "4", 
+        "homeTeamName": "Manchester United",
+         "fixtures": [
+         {"fixtureId": "10", "awayTeamId": "3", "awayTeamName": "Manchester City",  "homeGoals": "1", "awayGoals": "1"},  
+         {"fixtureId": "11", "awayTeamId": "2", "awayTeamName": "Liverpool",  "homeGoals": "1", "awayGoals": "1"}, 
+         {"fixtureId": "12", "awayTeamId": "1", "awayTeamName": "Arsenal", "homeGoals": "2", "awayGoals": "2"}
+         ] 
+    }  
+]
