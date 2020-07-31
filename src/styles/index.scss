@@ -1,0 +1,12 @@
+$textColor: #DEB992;
+$fonts: 'PremierSans-Bold', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+
+* {
+    color: $textColor;
+    font-family: $fonts !important;
+}
+
+.graphImage {   
+    width: 750px;
+    height: 750px;   
+}
