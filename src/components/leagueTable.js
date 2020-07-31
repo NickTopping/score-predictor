@@ -9,7 +9,7 @@ var hydratedDT = hydrateDT();
 
 function hydrateDT() {
   
-  var newDataTable = [];
+  var dataTable = [];
 
   for (var gameWeek in rounds) {
 
@@ -18,19 +18,19 @@ function hydrateDT() {
     for (var match in fixtures) {
       
       var homeTeamId = parseInt(fixtures[match].homeTeamId);
-      var homeTeamName = fixtures[match].homeTeamName;
-      var awayTeamId = parseInt(fixtures[match].awayTeamId);
-      var awayTeamName = fixtures[match].awayTeamName;
-
+      var homeTeamName = fixtures[match].homeTeamName; 
       var homeGoals = parseInt(fixtures[match].homeGoals);
-      var awayGoals = parseInt(fixtures[match].awayGoals);
-
       var homeWin = 0;
       var homeLoss = 0;
+      var draw = 0;
+      var awayTeamId = parseInt(fixtures[match].awayTeamId);
+      var awayTeamName = fixtures[match].awayTeamName;
+      var awayGoals = parseInt(fixtures[match].awayGoals); 
       var awayWin = 0;
       var awayLoss = 0;
-      var draw = 0;
-
+      var goalDifference = 0;
+      var totalPoints = 0;
+      
       switch(true) {
         case homeGoals > awayGoals:
           homeWin = 1
@@ -49,112 +49,83 @@ function hydrateDT() {
         console.log("Error, unrecognised TeamId");
         return;
       }
+
+      goalDifference = homeGoals - awayGoals;
+      totalPoints = (homeWin * 3) + draw;
   
       //If home team already exists
-      if (newDataTable.some(el => el.teamId === homeTeamId)) {   
+      if (dataTable.some(el => el.teamId === homeTeamId)) {   
         
-        const homeTeamIndex = newDataTable.findIndex(element => element.teamId === homeTeamId);
-        var goalDifference = homeGoals - awayGoals;
-        var totalPoints = (homeWin * 3) + draw;
-                     
-        var currentHomeTeam = updateTable(newDataTable[homeTeamIndex]); //can this just be teamID and use for both cases?
-        Object.assign(newDataTable[homeTeamIndex], 
-          {wins: (parseInt(homeWin) + parseInt(currentHomeTeam.totalWins))}, 
-          {draws: parseInt(draw) + parseInt(currentHomeTeam.totalDraws)}, 
-          {losses: parseInt(homeLoss) + parseInt(currentHomeTeam.totalLosses)},
-          {goalsFor: parseInt(homeGoals) + parseInt(currentHomeTeam.totalGF)},
-          {goalsAgainst: parseInt(awayGoals) + parseInt(currentHomeTeam.totalGA)},
-          {goalDifference: parseInt(goalDifference) + parseInt(currentHomeTeam.totalGD)},
-          {points: parseInt(totalPoints) + parseInt(currentHomeTeam.totalPoints)}
+        const homeTeamIndex = dataTable.findIndex(element => element.teamId === homeTeamId);
+                 
+        var currentHomeTeam = getTeamData(dataTable[homeTeamIndex]);
+        Object.assign(dataTable[homeTeamIndex], 
+          {wins: (homeWin + currentHomeTeam.totalWins)}, 
+          {draws: draw + currentHomeTeam.totalDraws}, 
+          {losses: homeLoss + currentHomeTeam.totalLosses},
+          {goalsFor: homeGoals + currentHomeTeam.totalGF},
+          {goalsAgainst: awayGoals + currentHomeTeam.totalGA},
+          {goalDifference: goalDifference + currentHomeTeam.totalGD},
+          {points: totalPoints + currentHomeTeam.totalPoints}
           );
-          //add new results to existing currentHomeTeam properties
       }
       //If home team doesn't already exist    
       else {    
-        newDataTable.push({teamId: homeTeamId, 
-                           teamName: homeTeamName,
-                           wins: 0, 
-                           draws: 0, 
-                           losses: 0, 
-                           goalsFor: 0, 
-                           goalsAgainst: 0, 
-                           goalDifference: 0, 
-                           points: 0
-                          });
 
-        const homeTeamIndex = newDataTable.findIndex(element => element.teamId === homeTeamId);   
-        
-        //May need to change, as only possible for one game to have been played in this scenario
-        var goalDifference = homeGoals - awayGoals;
-        var totalPoints = (homeWin * 3) + draw;
-        
-        Object.assign(newDataTable[homeTeamIndex], 
-          {wins: homeWin}, 
-          {draws: draw}, 
-          {losses: homeLoss},
-          {goalsFor: homeGoals},
-          {goalsAgainst: awayGoals},
-          {goalDifference: goalDifference},
-          {points: totalPoints}
-          );
-      }   
+        dataTable.push({teamId: homeTeamId, 
+                           teamName: homeTeamName,
+                           wins: homeWin, 
+                           draws: draw, 
+                           losses: homeLoss, 
+                           goalsFor: homeGoals, 
+                           goalsAgainst: awayGoals, 
+                           goalDifference: goalDifference, 
+                           points: totalPoints
+                          });
+      }  
+      
+      goalDifference = awayGoals - homeGoals;
+      totalPoints = (awayWin * 3) + draw;
 
       //If away team already exists
-      if (newDataTable.some(el => el.teamId === awayTeamId)) { 
+      if (dataTable.some(el => el.teamId === awayTeamId)) { 
 
-        const awayTeamIndex = newDataTable.findIndex(element => element.teamId === awayTeamId);
-        var goalDifference = awayGoals - homeGoals;
-        var totalPoints = (awayWin * 3) + draw;
+        const awayTeamIndex = dataTable.findIndex(element => element.teamId === awayTeamId);     
        
-        var currentAwayTeam = updateTable(newDataTable[awayTeamIndex]);
-        Object.assign(newDataTable[awayTeamIndex], 
-          {wins: (parseInt(awayWin) + parseInt(currentAwayTeam.totalWins))}, 
-          {draws: parseInt(draw) + parseInt(currentAwayTeam.totalDraws)}, 
-          {losses: parseInt(awayLoss) + parseInt(currentAwayTeam.totalLosses)},
-          {goalsFor: parseInt(awayGoals) + parseInt(currentAwayTeam.totalGF)},
-          {goalsAgainst: parseInt(homeGoals) + parseInt(currentAwayTeam.totalGA)},
-          {goalDifference: parseInt(goalDifference) + parseInt(currentAwayTeam.totalGD)},
-          {points: parseInt(totalPoints) + parseInt(currentAwayTeam.totalPoints)}
+        var currentAwayTeam = getTeamData(dataTable[awayTeamIndex]);
+        Object.assign(dataTable[awayTeamIndex], 
+          {wins: (awayWin + currentAwayTeam.totalWins)}, 
+          {draws: draw + currentAwayTeam.totalDraws}, 
+          {losses: awayLoss + currentAwayTeam.totalLosses},
+          {goalsFor: awayGoals + currentAwayTeam.totalGF},
+          {goalsAgainst: homeGoals + currentAwayTeam.totalGA},
+          {goalDifference: goalDifference + currentAwayTeam.totalGD},
+          {points: totalPoints + currentAwayTeam.totalPoints}
           );
       }
       //If away team doesn't already exist
-      else {    
-        newDataTable.push({teamId: awayTeamId, 
-                           teamName: awayTeamName,
-                           wins: 0, 
-                           draws: 0, 
-                           losses: 0, 
-                           goalsFor: 0, 
-                           goalsAgainst: 0, 
-                           goalDifference: 0, 
-                           points: 0
-                          });
+      else {
 
-        const awayTeamIndex = newDataTable.findIndex(element => element.teamId === awayTeamId); 
-        
-        //May need to change, as only possible for one game to have been played in this scenario
-        var goalDifference = awayGoals - homeGoals;
-        var totalPoints = (awayWin * 3) + draw;
-        
-        Object.assign(newDataTable[awayTeamIndex], 
-          {wins: awayWin}, 
-          {draws: draw}, 
-          {losses: awayLoss},
-          {goalsFor: awayGoals},
-          {goalsAgainst: homeGoals},
-          {goalDifference: goalDifference},
-          {points: totalPoints}
-          );
+        dataTable.push({teamId: awayTeamId, 
+                           teamName: awayTeamName,
+                           wins: awayWin, 
+                           draws: draw, 
+                           losses: awayLoss, 
+                           goalsFor: awayGoals, 
+                           goalsAgainst: homeGoals, 
+                           goalDifference: goalDifference, 
+                           points: totalPoints
+                          });
       }
     }
   }
 
-  newDataTable.sort((a, b) => b.points - a.points); 
+  dataTable.sort((a, b) => b.points - a.points); //not sorting by GD at the moment
 
-  return newDataTable;
+  return dataTable;
 }
 
-function updateTable(team) {
+function getTeamData(team) {
   return {totalWins: team.wins, 
           totalDraws: team.draws, 
           totalLosses: team.losses,
