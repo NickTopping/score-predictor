@@ -1,22 +1,152 @@
 import React from "react"
 import {  Table } from "semantic-ui-react";
 import 'semantic-ui-css/semantic.min.css'
-import data from '../responses/predictions.json';
+import data from '../responses/predictions2.json';
 import tableStyles from './leagueTable.module.scss'
 
-var teamList = data;
-var hydratedDT= hydrateDT();
+var rounds = data.rounds;
+var hydratedDT = hydrateDT();
 
 function hydrateDT() {
   
   var newDataTable = [];
 
-  for (var team in teamList){
+  for (var gameWeek in rounds) {
 
-    var fixtures = teamList[team].fixtures;
-    var results = getResults(fixtures);    
-    newDataTable[team] = results;
-    Object.assign(newDataTable[team], {homeTeamId: parseInt(teamList[team].homeTeamId)}, {homeTeamName: teamList[team].homeTeamName});
+    var fixtures = rounds[gameWeek].matches;
+
+    for (var match in fixtures) {
+      
+      var homeTeamId = parseInt(fixtures[match].homeTeamId);
+      var homeTeamName = fixtures[match].homeTeamName;
+      var awayTeamId = parseInt(fixtures[match].awayTeamId);
+      var awayTeamName = fixtures[match].awayTeamName;
+
+      var homeGoals = parseInt(fixtures[match].homeGoals);
+      var awayGoals = parseInt(fixtures[match].awayGoals);
+
+      var homeWin = 0;
+      var homeLoss = 0;
+      var awayWin = 0;
+      var awayLoss = 0;
+      var draw = 0;
+
+      switch(true) {
+        case homeGoals > awayGoals:
+          homeWin = 1
+          awayLoss = 1;
+          break;
+        case homeGoals < awayGoals:
+          awayWin = 1
+          homeLoss = 1
+          break;
+        default:
+          draw = 1
+      }
+      
+      //Further validation here
+      if (homeTeamId === 'undefined' || awayTeamId === 'undefined') { 
+        console.log("Error, unrecognised TeamId");
+        return;
+      }
+  
+      //If home team already exists
+      if (newDataTable.some(el => el.teamId === homeTeamId)) {   
+        
+        const homeTeamIndex = newDataTable.findIndex(element => element.teamId === homeTeamId);
+        var goalDifference = homeGoals - awayGoals;
+        var totalPoints = (homeWin * 3) + draw;
+                     
+        var currentHomeTeam = updateTable(newDataTable[homeTeamIndex]); //can this just be teamID and use for both cases?
+        Object.assign(newDataTable[homeTeamIndex], 
+          {wins: (parseInt(homeWin) + parseInt(currentHomeTeam.totalWins))}, 
+          {draws: parseInt(draw) + parseInt(currentHomeTeam.totalDraws)}, 
+          {losses: parseInt(homeLoss) + parseInt(currentHomeTeam.totalLosses)},
+          {goalsFor: parseInt(homeGoals) + parseInt(currentHomeTeam.totalGF)},
+          {goalsAgainst: parseInt(awayGoals) + parseInt(currentHomeTeam.totalGA)},
+          {goalDifference: parseInt(goalDifference) + parseInt(currentHomeTeam.totalGD)},
+          {points: parseInt(totalPoints) + parseInt(currentHomeTeam.totalPoints)}
+          );
+          //add new results to existing currentHomeTeam properties
+      }
+      //If home team doesn't already exist    
+      else {    
+        newDataTable.push({teamId: homeTeamId, 
+                           teamName: homeTeamName,
+                           wins: 0, 
+                           draws: 0, 
+                           losses: 0, 
+                           goalsFor: 0, 
+                           goalsAgainst: 0, 
+                           goalDifference: 0, 
+                           points: 0
+                          });
+
+        const homeTeamIndex = newDataTable.findIndex(element => element.teamId === homeTeamId);   
+        
+        //May need to change, as only possible for one game to have been played in this scenario
+        var goalDifference = homeGoals - awayGoals;
+        var totalPoints = (homeWin * 3) + draw;
+        
+        Object.assign(newDataTable[homeTeamIndex], 
+          {wins: homeWin}, 
+          {draws: draw}, 
+          {losses: homeLoss},
+          {goalsFor: homeGoals},
+          {goalsAgainst: awayGoals},
+          {goalDifference: goalDifference},
+          {points: totalPoints}
+          );
+      }   
+
+      //If away team already exists
+      if (newDataTable.some(el => el.teamId === awayTeamId)) { 
+
+        const awayTeamIndex = newDataTable.findIndex(element => element.teamId === awayTeamId);
+        var goalDifference = awayGoals - homeGoals;
+        var totalPoints = (awayWin * 3) + draw;
+       
+        var currentAwayTeam = updateTable(newDataTable[awayTeamIndex]);
+        Object.assign(newDataTable[awayTeamIndex], 
+          {wins: (parseInt(awayWin) + parseInt(currentAwayTeam.totalWins))}, 
+          {draws: parseInt(draw) + parseInt(currentAwayTeam.totalDraws)}, 
+          {losses: parseInt(awayLoss) + parseInt(currentAwayTeam.totalLosses)},
+          {goalsFor: parseInt(awayGoals) + parseInt(currentAwayTeam.totalGF)},
+          {goalsAgainst: parseInt(homeGoals) + parseInt(currentAwayTeam.totalGA)},
+          {goalDifference: parseInt(goalDifference) + parseInt(currentAwayTeam.totalGD)},
+          {points: parseInt(totalPoints) + parseInt(currentAwayTeam.totalPoints)}
+          );
+      }
+      //If away team doesn't already exist
+      else {    
+        newDataTable.push({teamId: awayTeamId, 
+                           teamName: awayTeamName,
+                           wins: 0, 
+                           draws: 0, 
+                           losses: 0, 
+                           goalsFor: 0, 
+                           goalsAgainst: 0, 
+                           goalDifference: 0, 
+                           points: 0
+                          });
+
+        const awayTeamIndex = newDataTable.findIndex(element => element.teamId === awayTeamId); 
+        
+        //May need to change, as only possible for one game to have been played in this scenario
+        var goalDifference = awayGoals - homeGoals;
+        var totalPoints = (awayWin * 3) + draw;
+        
+        Object.assign(newDataTable[awayTeamIndex], 
+          {wins: awayWin}, 
+          {draws: draw}, 
+          {losses: awayLoss},
+          {goalsFor: awayGoals},
+          {goalsAgainst: homeGoals},
+          {goalDifference: goalDifference},
+          {points: totalPoints}
+          );
+      }
+    }
   }
 
   newDataTable.sort((a, b) => b.points - a.points); 
@@ -24,48 +154,15 @@ function hydrateDT() {
   return newDataTable;
 }
 
-function getResults(fixtures) {
-  
-  var totalWins = 0;
-  var totalDraws = 0;
-  var totalLosses = 0;
-  var gf = 0;
-  var ga = 0;
-  var gd = 0;
-  var totalPoints = 0;
-  var totalResults;
-  
-  for (var match in fixtures){  
-
-    var homeGoals = parseInt(fixtures[match].homeGoals);
-    var awayGoals = parseInt(fixtures[match].awayGoals);
-
-    if (homeGoals > 0){
-      gf += homeGoals
-    }
-
-    if (awayGoals > 0){
-      ga += awayGoals
-    }
-
-    switch(true) {
-      case homeGoals > awayGoals:
-        totalWins++
-        break;
-      case homeGoals < awayGoals:
-        totalLosses++
-        break;
-      default:
-        totalDraws++
-    }
-  }
-
-  gd = gf - ga;
-  totalPoints = (totalWins * 3) + totalDraws;
-
-  totalResults = {wins: totalWins, draws: totalDraws, losses: totalLosses, goalsFor: gf, goalsAgainst: ga, goalDifference: gd, points: totalPoints};
-
-  return totalResults;
+function updateTable(team) {
+  return {totalWins: team.wins, 
+          totalDraws: team.draws, 
+          totalLosses: team.losses,
+          totalGF: team.goalsFor,
+          totalGA: team.goalsAgainst,
+          totalGD: team.goalDifference,
+          totalPoints: team.points,
+        }
 }
 
 const LeagueTable = () => {
@@ -87,8 +184,8 @@ const LeagueTable = () => {
         <Table.Body>
           {hydratedDT.map(el => {
             return (
-              <Table.Row key={el.homeTeamId}>
-                <Table.Cell className={tableStyles.row}>{el.homeTeamName}</Table.Cell>
+              <Table.Row key={el.teamId}>
+                <Table.Cell className={tableStyles.row}>{el.teamName}</Table.Cell>
                 <Table.Cell className={tableStyles.row}>{el.wins}</Table.Cell>
                 <Table.Cell className={tableStyles.row}>{el.draws}</Table.Cell>
                 <Table.Cell className={tableStyles.row}>{el.losses}</Table.Cell>
