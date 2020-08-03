@@ -1,6 +1,6 @@
-import React from "react"
+/*import React from "react"
 import {  Table } from "semantic-ui-react";
-import 'semantic-ui-css/semantic.min.css'
+//import 'semantic-ui-css/semantic.min.css'
 import data from '../responses/predictions2.json';
 import tableStyles from './leagueTable.module.scss'
 
@@ -201,4 +201,4 @@ const LeagueTable = () => {
   )
 }
 
-export default LeagueTable
+export default LeagueTable*/
