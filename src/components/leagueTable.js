@@ -1,6 +1,6 @@
 import React from "react"
-import { Table } from "semantic-ui-react"
-import "semantic-ui-css/semantic.min.css"
+import Table from 'react-bootstrap/Table'
+import 'bootstrap/dist/css/bootstrap.css';
 import data from "../responses/predictions.json"
 import tableStyles from "./leagueTable.module.scss"
 
@@ -162,35 +162,35 @@ function updateTable(dataTable, homeOrAway, teamId, win, draw, loss, homeGoals, 
 const LeagueTable = () => {
   return (
     <Table singleLine>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell className={tableStyles.tableHeader}>Team</Table.HeaderCell>
-            <Table.HeaderCell className={tableStyles.tableHeader}>W</Table.HeaderCell>
-            <Table.HeaderCell className={tableStyles.tableHeader}>D</Table.HeaderCell>
-            <Table.HeaderCell className={tableStyles.tableHeader}>L</Table.HeaderCell>
-            <Table.HeaderCell className={tableStyles.tableHeader}>GF</Table.HeaderCell>
-            <Table.HeaderCell className={tableStyles.tableHeader}>GA</Table.HeaderCell>
-            <Table.HeaderCell className={tableStyles.tableHeader}>GD</Table.HeaderCell>
-            <Table.HeaderCell className={tableStyles.tableHeader}>PTS</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
+        <thead>
+          <tr>
+            <th className={tableStyles.tableHeader}>Team</th>
+            <th className={tableStyles.tableHeader}>W</th>
+            <th className={tableStyles.tableHeader}>D</th>
+            <th className={tableStyles.tableHeader}>L</th>
+            <th className={tableStyles.tableHeader}>GF</th>
+            <th className={tableStyles.tableHeader}>GA</th>
+            <th className={tableStyles.tableHeader}>GD</th>
+            <th className={tableStyles.tableHeader}>PTS</th>
+          </tr>
+        </thead>
 
-        <Table.Body>
+        <tbody>
           {hydratedDT.map(el => {
             return (
-              <Table.Row key={el.teamId}>
-                <Table.Cell className={tableStyles.row}>{el.teamName}</Table.Cell>
-                <Table.Cell className={tableStyles.row}>{el.wins}</Table.Cell>
-                <Table.Cell className={tableStyles.row}>{el.draws}</Table.Cell>
-                <Table.Cell className={tableStyles.row}>{el.losses}</Table.Cell>
-                <Table.Cell className={tableStyles.row}>{el.goalsFor}</Table.Cell>
-                <Table.Cell className={tableStyles.row}>{el.goalsAgainst}</Table.Cell>
-                <Table.Cell className={tableStyles.row}>{el.goalDifference}</Table.Cell>
-                <Table.Cell className={tableStyles.row}>{el.points}</Table.Cell>
-              </Table.Row>
+              <tr key={el.teamId}>
+                <td className={tableStyles.row}>{el.teamName}</td>
+                <td className={tableStyles.row}>{el.wins}</td>
+                <td className={tableStyles.row}>{el.draws}</td>
+                <td className={tableStyles.row}>{el.losses}</td>
+                <td className={tableStyles.row}>{el.goalsFor}</td>
+                <td className={tableStyles.row}>{el.goalsAgainst}</td>
+                <td className={tableStyles.row}>{el.goalDifference}</td>
+                <td className={tableStyles.row}>{el.points}</td>
+              </tr>
             );
           })}
-        </Table.Body>
+        </tbody>
       </Table>
   )
 }
