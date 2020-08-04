@@ -44,7 +44,7 @@ function generateFixtures(teamList) {
   }
   console.log(arr);
 
-    const handleSaveToPC = arr => {
+    /*const handleSaveToPC = arr => {
     const fileData = JSON.stringify(arr);
     const blob = new Blob([fileData], {type: "text/plain"});
     const url = URL.createObjectURL(blob);
@@ -54,7 +54,7 @@ function generateFixtures(teamList) {
     link.click();
   }
 
-  handleSaveToPC(arr);
+  handleSaveToPC(arr);*/
 }
 
 const AddFixture = () => {
