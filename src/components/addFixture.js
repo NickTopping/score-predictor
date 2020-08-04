@@ -7,7 +7,6 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import 'bootstrap/dist/css/bootstrap.css';
 import allTeams from '../responses/teams.json';
 
-//read teamId and Team name from teams.json file
 //flag in array to say fixture has been confirmed or score confirmed?
 var teamList = allTeams;
 var arr = []; 
@@ -44,6 +43,18 @@ function generateFixtures(teamList) {
     }
   }
   console.log(arr);
+
+    const handleSaveToPC = arr => {
+    const fileData = JSON.stringify(arr);
+    const blob = new Blob([fileData], {type: "text/plain"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = 'testFile.json';
+    link.href = url;
+    link.click();
+  }
+
+  handleSaveToPC(arr);
 }
 
 const AddFixture = () => {
