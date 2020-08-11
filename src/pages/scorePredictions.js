@@ -1,5 +1,6 @@
 import React from "react"
 import Layout from "../components/layout"
+import ScoresTestTemp from "../components/getScores"
 
 const ScorePredictionsPage = () => {
 
@@ -7,6 +8,7 @@ const ScorePredictionsPage = () => {
       <Layout>
         <div>
           <h1>Score predictions here</h1>
+          <ScoresTestTemp/>
         </div>
       </Layout>
 
