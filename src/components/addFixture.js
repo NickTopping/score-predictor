@@ -19,35 +19,16 @@ async function getFixtures() { //this should be placed in api as /updateGameweek
 
 async function updateGameweek() { //this should be placed in api as /updateGameweek (need to call updateGameweek api in here)
     
-    //get json file in order to edit it
-    const fixtureArray = await fetch("http://localhost:9000/getAllFixtures")
-        .then(response => response.json());
+    const newGW = 4;
+    const fixtureId = "WOLSHE80172";
+
+    const fixtureArray = await fetch("http://localhost:9000/updateGameweek/" + newGW + "/" + fixtureId)
+        //.then(response => response.json());
+        .then(response => response);
     
     console.log("This won't run until the await has finished");
-    console.log(fixtureArray);
-
-    let gameWeekID = 30; //pass gameWeek as args
-    let fixtureToMoveIndex = fixtureArray[0].rounds[0].matches.findIndex(e => e.fixtureId === "EVELIV28373"); //pass fixtureId as args
-
-    console.log("Index of fixture to be moved:");
-    console.log(fixtureToMoveIndex);
-
-    let fixture = fixtureArray[0].rounds[0].matches[fixtureToMoveIndex]
-
-    fixtureArray[0].rounds[0].matches.splice(fixtureToMoveIndex, 1);
-    console.log("Fixture:");
-    console.log(fixture);
-
-    let gameWeekIndex = fixtureArray[0].rounds.findIndex(e => e.gw === gameWeekID);
-    console.log("GW index:");
-    console.log(gameWeekIndex);
-
-    fixtureArray[0].rounds[gameWeekIndex].matches.push(fixture);
-    console.log("GW index 2:");
-    console.log(fixtureArray[0].rounds[gameWeekIndex]);
-    
-    console.log("Array:");
-    console.log(fixtureArray);
+    //console.log("client-side response: " + response);
+    //console.log(fixtureArray);
 }
 
 export default function AddFixture() {
