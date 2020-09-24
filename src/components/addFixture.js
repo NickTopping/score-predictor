@@ -17,10 +17,10 @@ async function getFixtures() { //this should be placed in api as /updateGameweek
     //use fixtureArray to show all fixtures per gw
 }
 
-async function updateGameweek() { //this should be placed in api as /updateGameweek (need to call updateGameweek api in here)
+async function updateGameweek(newGW, fixtureId) { //this should be placed in api as /updateGameweek (need to call updateGameweek api in here)
     
-    const newGW = 4;
-    const fixtureId = "WOLSHE80172";
+    //const newGW = 4;
+    //const fixtureId = "WOLSHE80172";
 
     const fixtureArray = await fetch("http://localhost:9000/updateGameweek/" + newGW + "/" + fixtureId)
         //.then(response => response.json());
@@ -38,6 +38,9 @@ export default function AddFixture() {
         rounds: [],
     });
 
+    const [newGW, setNewGW] = useState('');
+    const [fixtureId, setfixtureId] = useState('');
+
     const url = "http://localhost:9000/generateFixtures";
 
     useEffect(() => { //mounts
@@ -48,17 +51,23 @@ export default function AddFixture() {
 
     return (
         <div className={addFixtureStyles.wrapper}>
-            <div>teams</div>
             <div className={addFixtureStyles.btnSubmit}>
                 <Button id='btnGenerateFixtureList' variant="primary" onClick={() => alert("Need to generate fixtures on button click, not on page load.")}>Generate Fixtures</Button> 
                 <div>
                     <span>Round Name: {fixtures.name}</span>
                     <span>Round Length: {fixtures.rounds.length}</span>
-                </div>
-                
+                </div>                
             </div>  
+            <label>
+                New Gameweek:
+                <input type="text" class="form-control" id="newGW" onChange={event => setNewGW(event.target.value)}></input>
+            </label>          
+            <label>
+                FixtureId:
+                <input type="text" class="form-control" id="fixture" onChange={event => setfixtureId(event.target.value)}></input>
+            </label>           
             <div className={addFixtureStyles.btnSubmit}>
-                <Button id='btnUpdateGameweek' variant="primary" onClick={() => updateGameweek()}>Update Gameweek</Button>
+                <Button id='btnUpdateGameweek' variant="primary" onClick={() => updateGameweek(newGW, fixtureId)}>Update Gameweek</Button>
             </div> 
         </div>    
 )}
