@@ -10,11 +10,20 @@
     margin: 0px 10px 0px 10px;
 }
 
-.btnSubmit {
-    float : right;
+.sectionSpacing {
+    //float : right;
+    margin-bottom: 30px;
 }
 
 .dropdownMenu {
     height: 400px;
     overflow-y: scroll;
+}
+
+span {
+    margin-right: 30px;
+}
+
+.sectionSpacing label {
+    margin-right: 20px;
 }

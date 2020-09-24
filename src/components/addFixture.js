@@ -6,29 +6,24 @@ import { DropdownButton, MenuItem } from 'react-bootstrap'
 import Dropdown from 'react-bootstrap/Dropdown'
 import 'bootstrap/dist/css/bootstrap.css';
     
-async function getFixtures() { //this should be placed in api as /updateGameweek
+async function getFixtures() {
     
     const fixtureArray = await fetch("http://localhost:9000/getAllFixtures")
         .then(response => response.json());
     
-    console.log("This won't run until the await has finished");
+    console.log("This log won't run until the await for getFixtures() has finished");
     console.log(fixtureArray);
 
     //use fixtureArray to show all fixtures per gw
 }
 
-async function updateGameweek(newGW, fixtureId) { //this should be placed in api as /updateGameweek (need to call updateGameweek api in here)
-    
-    //const newGW = 4;
-    //const fixtureId = "WOLSHE80172";
+async function updateGameweek(newGW, fixtureId) {
 
     const fixtureArray = await fetch("http://localhost:9000/updateGameweek/" + newGW + "/" + fixtureId)
-        //.then(response => response.json());
         .then(response => response);
-    
-    console.log("This won't run until the await has finished");
-    //console.log("client-side response: " + response);
-    //console.log(fixtureArray);
+
+    console.log("This log won't run until the await for updateGameweek() has finished");
+    console.log(fixtureArray);    
 }
 
 export default function AddFixture() {
@@ -51,22 +46,22 @@ export default function AddFixture() {
 
     return (
         <div className={addFixtureStyles.wrapper}>
-            <div className={addFixtureStyles.btnSubmit}>
-                <Button id='btnGenerateFixtureList' variant="primary" onClick={() => alert("Need to generate fixtures on button click, not on page load.")}>Generate Fixtures</Button> 
+            <div className={addFixtureStyles.sectionSpacing}>              
                 <div>
                     <span>Round Name: {fixtures.name}</span>
-                    <span>Round Length: {fixtures.rounds.length}</span>
-                </div>                
+                    <span>Round Length: {fixtures.rounds.length - 1}</span>
+                </div>  
+                <Button id='btnGenerateFixtureList' variant="primary" onClick={() => alert("Need to generate fixtures on button click, not on page load.")}>Generate Fixtures</Button>               
             </div>  
-            <label>
-                New Gameweek:
-                <input type="text" class="form-control" id="newGW" onChange={event => setNewGW(event.target.value)}></input>
-            </label>          
-            <label>
-                FixtureId:
-                <input type="text" class="form-control" id="fixture" onChange={event => setfixtureId(event.target.value)}></input>
-            </label>           
-            <div className={addFixtureStyles.btnSubmit}>
+            <div className={addFixtureStyles.sectionSpacing}>
+                <label>
+                    New Gameweek:
+                    <input type="text" class="form-control" id="newGW" onChange={event => setNewGW(event.target.value)}></input>
+                </label>          
+                <label>
+                    FixtureId:
+                    <input type="text" class="form-control" id="fixture" onChange={event => setfixtureId(event.target.value)}></input>
+                </label>                     
                 <Button id='btnUpdateGameweek' variant="primary" onClick={() => updateGameweek(newGW, fixtureId)}>Update Gameweek</Button>
             </div> 
         </div>    
