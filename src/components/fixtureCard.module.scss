@@ -1,0 +1,33 @@
+.wrapper {
+    margin-top: 50px;
+}
+
+.card {
+    padding: 10px;
+    background-color: #1BA098;
+    width: 100%;
+}
+
+.teams {
+    display: inline-flex;
+    margin-left: 25%;
+}
+.teams .teamsText {
+    margin-right: 10px;
+    font-size: large;
+    color: black;
+}
+
+.dropdownMenu {
+    transform: translate(0px, 40px) !important;
+    min-width: 100% !important;
+}
+
+.dropdownItem {
+    font-weight: bold;
+    text-align: center;
+}
+
+.dropdownItem:hover {
+    color: #1BA098;
+}

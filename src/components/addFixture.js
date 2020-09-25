@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react"; //useState is a hook, manages state in a functional component
 import addFixtureStyles from './addFixture.module.scss'
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form'
-import { DropdownButton, MenuItem } from 'react-bootstrap'
-import Dropdown from 'react-bootstrap/Dropdown'
 import 'bootstrap/dist/css/bootstrap.css';
+import FixtureCard from "./fixtureCard";
     
 async function getFixtures() {
     
@@ -64,36 +62,7 @@ export default function AddFixture() {
                 </label>                     
                 <Button id='btnUpdateGameweek' variant="primary" onClick={() => updateGameweek(newGW, fixtureId)}>Update Gameweek</Button>
             </div> 
+            <FixtureCard/>
         </div>    
 )}
-
-//Change home/away teams to be dropdown box or type (select from existing teams)
-/*const AddFixture = () => {
-    return (
-        <div className={addFixtureStyles.wrapper}>
-            <div className={addFixtureStyles.controlSpacing}>
-                <Form.Control placeholder="Home Team" />  
-                <label className={addFixtureStyles.versusText}>vs</label> 
-                <Form.Control placeholder="Away Team" />          
-            </div>           
-            <div className={addFixtureStyles.controlSpacing}>
-                <label for="start">Fixture Date:</label>
-                <input type="date" id="start" name="trip-start"
-                    value="2018-07-22"
-                    min="2018-01-01" max="2018-12-31">
-                </input>
-            </div>
-            <DropdownButton alignRight title="Gameweek" id="dropdown-menu-gw">
-                <div className={addFixtureStyles.dropdownMenu}>
-                    {gwOptions.map((gw, i) => <Dropdown.Item key={i}><Dropdown.Divider/>{gw.value}</Dropdown.Item>)}
-                </div>
-            </DropdownButton>
-            <div className={addFixtureStyles.btnSubmit}>
-                <Button variant="primary">Primary</Button>{' '}
-            </div>          
-        </div>
-    )
-}
-
-export default AddFixture*/
 
