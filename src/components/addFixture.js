@@ -3,6 +3,7 @@ import addFixtureStyles from './addFixture.module.scss'
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.css';
 import FixtureCard from "./fixtureCard";
+import GWSelector from "./gwSelector";
     
 async function getFixtures() {
     
@@ -22,6 +23,21 @@ async function updateGameweek(newGW, fixtureId) {
 
     console.log("This log won't run until the await for updateGameweek() has finished");
     console.log(fixtureArray);    
+}
+
+function decrementCounter(){
+    //Don't go below 0
+    return null;
+}
+
+function incrementCounter(){
+    //Don't go above 38
+    return null;
+}
+
+var loop = [];
+for (var i = 0; i <= 38; i++) {
+    loop.push(i);
 }
 
 export default function AddFixture() {
@@ -49,7 +65,7 @@ export default function AddFixture() {
                     <span>Round Name: {fixtures.name}</span>
                     <span>Round Length: {fixtures.rounds.length - 1}</span>
                 </div>  
-                <Button id='btnGenerateFixtureList' variant="primary" onClick={() => alert("Need to generate fixtures on button click, not on page load.")}>Generate Fixtures</Button>               
+                <Button id='btnGenerateFixtureList' className={addFixtureStyles.button} onClick={() => alert("Need to generate fixtures on button click, not on page load.")}>Generate Fixtures</Button>               
             </div>  
             <div className={addFixtureStyles.sectionSpacing}>
                 <label>
@@ -60,9 +76,14 @@ export default function AddFixture() {
                     FixtureId:
                     <input type="text" class="form-control" id="fixture" onChange={event => setfixtureId(event.target.value)}></input>
                 </label>                     
-                <Button id='btnUpdateGameweek' variant="primary" onClick={() => updateGameweek(newGW, fixtureId)}>Update Gameweek</Button>
-            </div> 
-            <FixtureCard/>
+                <Button id='btnUpdateGameweek' className={addFixtureStyles.button} onClick={() => updateGameweek(newGW, fixtureId)}>Update Gameweek</Button>
+            </div>
+            <GWSelector/>
+            <div id='fixtureCardList'>
+                {loop.map(function(index){
+                    return <div key={ index }><FixtureCard/></div>;
+                })}
+            </div>         
         </div>    
 )}
 

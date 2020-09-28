@@ -1,9 +1,10 @@
-$textColor: #DEB992;
+$textColor: rgb(55, 0, 60);
 $fonts: 'PremierSans-Bold', Arial, 'Helvetica Neue', Helvetica, sans-serif;
 
 * {
     color: $textColor;
     font-family: $fonts !important;
+    font-weight: 600;
 }
 
 .graphImage {   
@@ -13,4 +14,8 @@ $fonts: 'PremierSans-Bold', Arial, 'Helvetica Neue', Helvetica, sans-serif;
 
 h1 {
     margin-bottom: 30px !important;
+}
+
+Button {
+    color: $textColor; 
 }

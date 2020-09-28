@@ -21,3 +21,11 @@ span {
 .sectionSpacing label {
     margin-right: 20px;
 }
+
+.button, .button:hover, .button:active, .button:focus {
+    background-color: #37003c !important;
+    border-color: #37003c !important;
+    outline-style: none !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
+}

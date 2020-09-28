@@ -1,5 +1,5 @@
-$lightBlue: #1BA098;
-$darkBlue: #051622;
+$green: rgb(0, 255, 135);
+$purple: #37003c;
 
 .container {
     height: 10rem;
@@ -13,11 +13,11 @@ $darkBlue: #051622;
     list-style-type: none;
     margin: 0;
     padding: 0;
-    background-color: $darkBlue;
+    background-color: $purple;
 }
 
 .nav-item {
-    color: $lightBlue;
+    color: white; //$green;
     margin-right: 1px;
     text-decoration: none;
     font-size: 16px;
@@ -28,13 +28,14 @@ $darkBlue: #051622;
 }
 
 .nav-item:hover {
-    color: $darkBlue;
-    background-color: $lightBlue;
+    color: $purple;
+    background-color: $green;
+    text-decoration: none;
 }
 
 .active-nav-item {
-    color: $darkBlue;
-    background-color: $lightBlue;
+    color: $purple;
+    background-color: $green;
 }
 
 .h1 {

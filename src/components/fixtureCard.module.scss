@@ -1,11 +1,12 @@
 .wrapper {
-    margin-top: 50px;
+    margin-top: 5px;
 }
 
 .card {
     padding: 10px;
-    background-color: #1BA098;
+    background-color: rgb(0, 255, 135);
     width: 100%;
+    display: flex;
 }
 
 .teams {
@@ -14,8 +15,9 @@
 }
 .teams .teamsText {
     margin-right: 10px;
+    margin-top: 6px;
     font-size: large;
-    color: black;
+    color: #37003c;
 }
 
 .dropdownMenu {
@@ -29,5 +31,22 @@
 }
 
 .dropdownItem:hover {
-    color: #1BA098;
+    color: rgb(0, 255, 135);
+}
+
+.button, .button:hover, .button:active, .button:focus {
+    background-color: #37003c !important;
+    border-color: #37003c !important;
+    outline-style: none !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
+}
+
+.btnConfirm, .btnConfirm:hover, .btnConfirm:active, .btnConfirm:focus {
+    margin-left: 50px;
+    background-color: #ff2882 !important;
+    border-color: #ff2882 !important;
+    outline-style: none !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
 }
