@@ -12,7 +12,7 @@ async function getFixtures() {
     
     console.log("This log won't run until the await for getFixtures() has finished");
     console.log(fixtureArray);
-
+    return fixtureArray;
     //use fixtureArray to show all fixtures per gw
 }
 
@@ -25,22 +25,60 @@ async function updateGameweek(newGW, fixtureId) {
     console.log(fixtureArray);    
 }
 
-function decrementCounter(){
-    //Don't go below 0
-    return null;
-}
-
-function incrementCounter(){
-    //Don't go above 38
-    return null;
-}
-
 var loop = [];
 for (var i = 0; i <= 38; i++) {
     loop.push(i);
 }
 
+const fixtureArray = //test data - needs deleting
+[
+    {
+        "name": "Premier League 2019/20",
+        "rounds": [
+          {
+            "gw": 22,
+            "matches": [
+            {
+                "fixtureId": "LEEWOL71141",
+                "date": "2000-01-01",
+                "homeTeamId": 9,
+                "homeTeamName": "Leeds United",
+                "awayTeamId": 20,
+                "awayTeamName": "Wolverhampton Wanderers",
+                "homeGoals": 0,
+                "awayGoals": 0
+            },
+            {
+                "fixtureId": "CHELIV92469",
+                "date": "2000-01-01",
+                "homeTeamId": 6,
+                "homeTeamName": "Chelsea",
+                "awayTeamId": 11,
+                "awayTeamName": "Liverpool",
+                "homeGoals": 0,
+                "awayGoals": 0
+            },
+            {
+                "fixtureId": "WESAST94394",
+                "date": "2000-01-01",
+                "homeTeamId": 18,
+                "homeTeamName": "West Bromwich Albion",
+                "awayTeamId": 2,
+                "awayTeamName": "Aston Villa",
+                "homeGoals": 0,
+                "awayGoals": 0
+            }
+            ]
+        }
+        ]
+    }
+];
+
 export default function AddFixture() {
+
+    //const fixtureArray = getFixtures();
+    const allRounds = fixtureArray[0].rounds;
+    var gwFixtures = allRounds.filter(fixture => fixture.gw === 22); //Change to gwSelector value
 
     const [fixtures, setFixtures] = useState({
         name: '',
@@ -81,7 +119,7 @@ export default function AddFixture() {
             <GWSelector/>
             <div id='fixtureCardList'>
                 {loop.map(function(index){
-                    return <div key={ index }><FixtureCard/></div>;
+                    return <div key={ index }><FixtureCard fixtures={gwFixtures}/></div>;
                 })}
             </div>         
         </div>    
