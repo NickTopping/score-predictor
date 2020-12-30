@@ -11,15 +11,15 @@ for (var i = 0; i <= 38; i++) {
     gwOptions.push(i);
 }
 
-const FixtureCard = ({fixtures}) => { //state/props to accept value and map list of fixtures per gw
-    
+const FixtureCard = ({ match }) => { //state/props to accept value and map list of fixtures per gw
+
     return (
         <div className={fixtureCardStyles.wrapper}>
             <div className={fixtureCardStyles.card}>
                 <div className={fixtureCardStyles.teams}>
-                    <div className={fixtureCardStyles.teamsText}>{fixtures[0].matches[0].homeTeamName}</div>
+                    <div className={fixtureCardStyles.teamsText}>{match.homeTeamName}</div>
                     <div className={fixtureCardStyles.teamsText}>vs</div> 
-                    <div className={fixtureCardStyles.teamsText}>{fixtures[0].matches[0].awayTeamName}</div>   
+                    <div className={fixtureCardStyles.teamsText}>{match.awayTeamName}</div>   
                     <Dropdown as={ButtonGroup}>
                         <Button className={fixtureCardStyles.button}>Gameweek</Button>
                         <Dropdown.Toggle split className={fixtureCardStyles.button} id="dropdown-split-basic" />
