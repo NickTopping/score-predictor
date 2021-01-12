@@ -14,6 +14,15 @@ async function updateGameweek(newGW, fixtureId) {
     console.log(fixtureArray);    
 }
 
+async function generateFixtures() {
+
+    const result = await fetch("http://localhost:9000/generateFixtures")
+        .then(response => response);
+
+    console.log("All fixtures have been generated");    
+    console.log(result);
+}
+
 const AddFixture = () => {
     // const [fixtures, setFixtures] = useState({
     //     name: '',
@@ -48,7 +57,7 @@ const AddFixture = () => {
                     {/*<span>Round Name: {fixtures.name}</span>
                     <span>Round Length: {fixtures.rounds.length - 1}</span>*/}
                 </div>  
-                <Button id='btnGenerateFixtureList' className={addFixtureStyles.button} onClick={() => alert("Need to generate fixtures on button click, not on page load.")}>Generate Fixtures</Button>               
+                <Button id='btnGenerateFixtureList' className={addFixtureStyles.button} onClick={() => generateFixtures()}>Generate Fixtures</Button>               
             </div>  
             <div className={addFixtureStyles.sectionSpacing}>
                 <label>
