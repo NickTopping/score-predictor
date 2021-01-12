@@ -19,6 +19,7 @@ export default function SetLeagueTable() {
         <thead>
           <tr>
             <th className={tableStyles.tableHeader}>Team</th>
+            <th className={tableStyles.tableHeader}>P</th>
             <th className={tableStyles.tableHeader}>W</th>
             <th className={tableStyles.tableHeader}>D</th>
             <th className={tableStyles.tableHeader}>L</th>
@@ -34,6 +35,7 @@ export default function SetLeagueTable() {
             return (
               <tr key={el.teamId}>
                 <td className={tableStyles.row}>{el.teamName}</td>
+                <td className={tableStyles.row}>{el.played}</td>
                 <td className={tableStyles.row}>{el.wins}</td>
                 <td className={tableStyles.row}>{el.draws}</td>
                 <td className={tableStyles.row}>{el.losses}</td>
