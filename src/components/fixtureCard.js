@@ -19,15 +19,17 @@ const FixtureCard = ({ match }) => { //state/props to accept value and map list 
                 <div className={fixtureCardStyles.teams}>
                     <div className={fixtureCardStyles.teamsText}>{match.homeTeamName}</div>
                     <div className={fixtureCardStyles.teamsText}>vs</div> 
-                    <div className={fixtureCardStyles.teamsText}>{match.awayTeamName}</div>   
+                    <div className={fixtureCardStyles.teamsText}>{match.awayTeamName}</div>                     
+                </div>   
+                <div className={fixtureCardStyles.dropdownFull}>
                     <Dropdown as={ButtonGroup}>
                         <Button className={fixtureCardStyles.button}>Gameweek</Button>
                         <Dropdown.Toggle split className={fixtureCardStyles.button} id="dropdown-split-basic" />
                         <Dropdown.Menu className={fixtureCardStyles.dropdownMenu}>
                             {gwOptions.map((gw, i) => <Dropdown.Item className={fixtureCardStyles.dropdownItem} key={i}>{gw}</Dropdown.Item>)}
                         </Dropdown.Menu>
-                    </Dropdown>
-                </div>                        
+                    </Dropdown>    
+                </div>                 
                 {/*<div>
                     <label for="start">Fixture Date:</label>
                     <input type="date" id="start" name="trip-start"
@@ -35,9 +37,6 @@ const FixtureCard = ({ match }) => { //state/props to accept value and map list 
                         min="2018-01-01" max="2018-12-31">
                     </input>
                 </div>*/}                
-                <div>
-                    <Button className={fixtureCardStyles.btnConfirm}>Confirm</Button> {/*Only show Confirm button if GW has been changed*/}  
-                </div>
             </div>         
         </div>
     )

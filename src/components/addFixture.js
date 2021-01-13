@@ -51,12 +51,8 @@ const AddFixture = () => {
     }, []);
 
     return (
-        <div className={addFixtureStyles.wrapper}>
+        <div>
             <div className={addFixtureStyles.sectionSpacing}>              
-                <div>
-                    {/*<span>Round Name: {fixtures.name}</span>
-                    <span>Round Length: {fixtures.rounds.length - 1}</span>*/}
-                </div>  
                 <Button id='btnGenerateFixtureList' className={addFixtureStyles.button} onClick={() => generateFixtures()}>Generate Fixtures</Button>               
             </div>  
             <div className={addFixtureStyles.sectionSpacing}>
@@ -73,13 +69,15 @@ const AddFixture = () => {
             <GWSelector/>
             {allFixtures.length ? (
                 allFixtures.map(({ name, rounds }, index) => (
-                    <div className='years' key={index}>
+                    <div key={index}>
                         <span>{name}</span>
+                        <Button className={addFixtureStyles.btnConfirm}>Confirm Gameweek Changes</Button> {/*Only show Confirm button if GW has been changed*/}  
                         {rounds.map(({ gw, matches }, index) => (
                             <div className='fixtureCardList' key={index}>
                                 {matches.map((match, index) => <FixtureCard key={index} match={match}/>)}
                             </div>
-                        ))}                           
+                        ))}   
+                        <Button className={addFixtureStyles.btnConfirm}>Confirm Gameweek Changes</Button> {/*Only show Confirm button if GW has been changed*/}                       
                     </div>                  
                 ))
             ) : null}     
