@@ -5,12 +5,33 @@ import 'bootstrap/dist/css/bootstrap.css';
 import FixtureCard from "./fixtureCard";
 import GWSelector from "./gwSelector";
 
+//Update single GW
 async function updateGameweek(newGW, fixtureId) {
 
     const fixtureArray = await fetch("http://localhost:9000/updateGameweek/" + newGW + "/" + fixtureId)
         .then(response => response);
 
     console.log("This log won't run until the await for updateGameweek() has finished");
+    console.log(fixtureArray);    
+}
+
+//Update multiple GWs
+async function updateGameweek2(gwUpdateArray) {
+
+    console.log("CHANGED GWs: ", gwUpdateArray);
+
+    const requestOptions = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            "gwUpdates": gwUpdateArray                  
+        })
+    };
+
+    const fixtureArray = await fetch("http://localhost:9000/updateGameweek2", requestOptions)
+        .then(response => response);
+
+    console.log("This log won't run until the await for updateGameweek2() has finished");
     console.log(fixtureArray);    
 }
 
@@ -24,20 +45,13 @@ async function generateFixtures() {
 }
 
 const AddFixture = () => {
-    // const [fixtures, setFixtures] = useState({
-    //     name: '',
-    //     rounds: [],
-    // });
 
     const [newGameweek, setNewGameweek] = useState('');
     const [fixtureID, setFixtureID] = useState('');
     const [allFixtures, setAllFixtures] = useState([]);
-
-    // const generateFixtures = () => {
-    //     fetch('/generateFixtures')
-    //         .then(response => response.json())
-    //         .then(data => setFixtures(data && data[0] || fixtures));
-    // };
+    const [filteredFixturesState, setFilteredFixturesState] = useState([]);
+    const [gwCounter, setGwCounter] = useState(0);
+    const [changedGWArray, setChangedGWArray] = useState([]);
 
     const getAllFixtures = () => {
         fetch('http://localhost:9000/getAllFixtures')
@@ -45,10 +59,36 @@ const AddFixture = () => {
             .then(data => setAllFixtures(data || allFixtures));
     };
 
+    const getGWCounter = (counter) => { //callback
+        
+        setGwCounter(counter);
+
+        /****************************/
+        //Use instead: allFixturesCopy = [...allFixtures]; DOESN'T WORK?
+        var allFixturesCopy = JSON.parse(JSON.stringify(allFixtures)); //NEEDED DEEP COPY OF ALLFIXTURES ARRAY, OTHERWISE REFERENCE WILL MAKE ORIGINAL ARRAY CHANGE ITS STATE AS WELL
+        var filteredFixtures = allFixtures[0].rounds.filter(function(round) {
+            return round.gw === counter; //why is gwCounter not up to date by this point?
+        });
+
+        allFixturesCopy[0].rounds = filteredFixtures; //Only pass rounds that fall under selected gw counter
+        setFilteredFixturesState(allFixturesCopy);
+
+        //TRY USE EFFECT TO SET GW0 ON LOAD? WILL NEED TO BE FILTERED BY JUST GW 0
+        /****************************/
+    };
+
     // First mount (ran once)
     useEffect(() => {
         getAllFixtures();
     }, []);
+
+    let confirmButton;
+    if (changedGWArray.length > 0) {
+        confirmButton = <Button className={addFixtureStyles.btnConfirm} onClick={() => updateGameweek2(changedGWArray)}>Confirm Gameweek Changes</Button>
+    } 
+    else {
+        confirmButton = null;
+    }
 
     return (
         <div>
@@ -66,18 +106,18 @@ const AddFixture = () => {
                 </label>                     
                 <Button id='btnUpdateGameweek' className={addFixtureStyles.button} onClick={() => updateGameweek(newGameweek, fixtureID)}>Update Gameweek</Button>
             </div>
-            <GWSelector/>
-            {allFixtures.length ? (
-                allFixtures.map(({ name, rounds }, index) => (
+            <GWSelector gwCounter = {gwCounter} callback = {getGWCounter}/>
+            {filteredFixturesState.length ? (
+                filteredFixturesState.map(({ name, rounds }, index) => (
                     <div key={index}>
-                        <span>{name}</span>
-                        <Button className={addFixtureStyles.btnConfirm}>Confirm Gameweek Changes</Button> {/*Only show Confirm button if GW has been changed*/}  
-                        {rounds.map(({ gw, matches }, index) => (
+                        <span>{name}</span>  
+                        {confirmButton}
+                        {rounds.map(({ matches }, index) => (
                             <div className='fixtureCardList' key={index}>
-                                {matches.map((match, index) => <FixtureCard key={index} match={match}/>)}
+                                {matches.map((match, index) => <FixtureCard key={index} match={match} setChangedGWArray={setChangedGWArray}/>)}
                             </div>
-                        ))}   
-                        <Button className={addFixtureStyles.btnConfirm}>Confirm Gameweek Changes</Button> {/*Only show Confirm button if GW has been changed*/}                       
+                        ))}     
+                        {confirmButton}                     
                     </div>                  
                 ))
             ) : null}     

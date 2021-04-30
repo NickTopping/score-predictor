@@ -6,34 +6,39 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import 'bootstrap/dist/css/bootstrap.css';
 
 var newGWArray = [];
-
 var gwOptions = [];
 
 for (var i = 0; i <= 38; i++) {
-    gwOptions.push(i);
+    gwOptions.push(i.toString()); //Converted to string as 0 was being passed as null for the handleSelect event parameter
 }
 
-const FixtureCard = ({ match }) => { //state/props to accept value and map list of fixtures per gw
+const FixtureCard = ({ match, setChangedGWArray }) => {
 
-    const [selectedfixture, setSelectedfixture] = useState(''); //Need to pass to addFixture.js parent component - is this needed? Currently unused
-    const [selectedGw, setSelectedGw] = useState(''); //Need to pass to addFixture.js parent component
-    const handleSelect=(e)=>{
+    const [selectedGw, setSelectedGw] = useState(0);
+    const handleSelect = (e) => {
         
         console.log(match.fixtureId)
         console.log(e);
      
-        setSelectedfixture(match.fixtureId);
         setSelectedGw(e);
         
+        //if array already contains fixtureId, update
+        if (newGWArray.some(e => e.fixtureId === match.fixtureId)) {          
+            var fixtureIndex = newGWArray.findIndex((obj => obj.fixtureId === match.fixtureId));
+            newGWArray[fixtureIndex].newGW = e;
+        }
+        //else, add new fixtureId to array
+        else {
+            newGWArray.push( 
+                {
+                    fixtureId: match.fixtureId,  
+                    gw: e                     
+                });
+        }
         //TODO
-        //if array already contains fixtureId, update, else add
-        //if array already contains fixtureId, but now the gw has been reset to current value, remove from array
-        newGWArray.push( 
-            {
-                fixtureId: match.fixtureId,  
-                newGW: e                     
-            });
-        console.log(newGWArray);
+        //if array already contains fixtureId, but now the gw has been reset to current value, remove from array (and/or create a "Cancel" button)
+
+        setChangedGWArray(newGWArray); //useState call
     }
     
     return (
@@ -46,7 +51,7 @@ const FixtureCard = ({ match }) => { //state/props to accept value and map list 
                 </div> 
                 <div className={fixtureCardStyles.dropdownFull}>
                     <Dropdown as={ButtonGroup} onSelect={handleSelect}>
-                        <Button className={fixtureCardStyles.button}>Gameweek {selectedGw}</Button>
+                        <Button className={fixtureCardStyles.button}>Gameweek {selectedGw}</Button> {/*selectedGw needs to match the gameweek currently assigned to the match*/}
                         <Dropdown.Toggle split className={fixtureCardStyles.button} id="dropdown-split-basic" />
                         <Dropdown.Menu className={fixtureCardStyles.dropdownMenu}>
                             {gwOptions.map((gw, i) => <Dropdown.Item className={fixtureCardStyles.dropdownItem} key={i} eventKey={gw}>{gw}</Dropdown.Item>)}
