@@ -53,17 +53,13 @@ const AddFixture = () => {
     const [gwCounter, setGwCounter] = useState(0);
     const [changedGWArray, setChangedGWArray] = useState([]);
 
-    const getAllFixtures = () => {
-        fetch('http://localhost:9000/getAllFixtures')
-            .then(response => response.json())
-            .then(data => setAllFixtures(data || allFixtures));
+    const getAllFixtures = async() => { //Can't await function unless it's async
+        return fetch('http://localhost:9000/getAllFixtures')       
     };
 
     const getGWCounter = (counter) => { //callback
-        
         setGwCounter(counter);
 
-        /****************************/
         //Use instead: allFixturesCopy = [...allFixtures]; DOESN'T WORK?
         var allFixturesCopy = JSON.parse(JSON.stringify(allFixtures)); //NEEDED DEEP COPY OF ALLFIXTURES ARRAY, OTHERWISE REFERENCE WILL MAKE ORIGINAL ARRAY CHANGE ITS STATE AS WELL
         var filteredFixtures = allFixtures[0].rounds.filter(function(round) {
@@ -72,15 +68,25 @@ const AddFixture = () => {
 
         allFixturesCopy[0].rounds = filteredFixtures; //Only pass rounds that fall under selected gw counter
         setFilteredFixturesState(allFixturesCopy);
-
-        //TRY USE EFFECT TO SET GW0 ON LOAD? WILL NEED TO BE FILTERED BY JUST GW 0
-        /****************************/
     };
 
-    // First mount (ran once)
+    //First mount (ran once)
     useEffect(() => {
-        getAllFixtures();
+        async function fetchData() {
+           await getAllFixtures() //Because we use await here, its containing function has to be async
+           .then(response => response.json())
+            .then(data => {
+                setAllFixtures(data)
+            });
+        } 
+        fetchData();
     }, []);
+
+    useEffect(() => {
+        if (allFixtures.length) {
+            getGWCounter(0);
+        }        
+    }, [allFixtures]); //Dependancy array - called when allFixtures changes (only happens once)
 
     let confirmButton;
     if (changedGWArray.length > 0) {
