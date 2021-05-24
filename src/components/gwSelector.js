@@ -25,9 +25,9 @@ const GWSelector = ({gwCounter, callback}) => {
     
     return (
             <div className={gwSelectorStyles.gwCounter}>
-                <Button className={fixtureCardStyles.button} onClick={(e)=> changeCounter(-1)}>&lt;</Button>
+                <Button className={fixtureCardStyles.button} onClick={()=> changeCounter(-1)}>&lt;</Button>
                 <div className={gwSelectorStyles.gwCounterSpacing}>Gameweek {gwCounter}</div>
-                <Button className={fixtureCardStyles.button} onClick={(e)=> changeCounter(+1)}>&gt;</Button>
+                <Button className={fixtureCardStyles.button} onClick={()=> changeCounter(+1)}>&gt;</Button>
             </div>          
     )
 }

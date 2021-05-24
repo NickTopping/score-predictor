@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import fixtureCardStyles from './fixtureCard.module.scss'
 import Button from 'react-bootstrap/Button';
 import { ButtonGroup } from 'react-bootstrap'
@@ -12,27 +12,29 @@ for (var i = 0; i <= 38; i++) {
     gwOptions.push(i.toString()); //Converted to string as 0 was being passed as null for the handleSelect event parameter
 }
 
-const FixtureCard = ({ match, setChangedGWArray }) => {
+const FixtureCard = ({gwValue, match, setChangedGWArray}) => {
 
-    const [selectedGw, setSelectedGw] = useState(0);
-    const handleSelect = (e) => {
+    const [selectedGw, setSelectedGw] = useState(gwValue);
+
+    useEffect(() => {
+        setSelectedGw(gwValue);       
+    }, [gwValue]);
+
+    const handleSelect = (newDropdownValue) => {
         
-        console.log(match.fixtureId)
-        console.log(e);
-     
-        setSelectedGw(e);
+        setSelectedGw(newDropdownValue);
         
         //if array already contains fixtureId, update
-        if (newGWArray.some(e => e.fixtureId === match.fixtureId)) {          
+        if (newGWArray.some(newDropdownValue => newDropdownValue.fixtureId === match.fixtureId)) {          
             var fixtureIndex = newGWArray.findIndex((obj => obj.fixtureId === match.fixtureId));
-            newGWArray[fixtureIndex].newGW = e;
+            newGWArray[fixtureIndex].newGW = newDropdownValue;
         }
         //else, add new fixtureId to array
         else {
             newGWArray.push( 
                 {
                     fixtureId: match.fixtureId,  
-                    gw: e                     
+                    gw: newDropdownValue                     
                 });
         }
         //TODO
@@ -51,7 +53,7 @@ const FixtureCard = ({ match, setChangedGWArray }) => {
                 </div> 
                 <div className={fixtureCardStyles.dropdownFull}>
                     <Dropdown as={ButtonGroup} onSelect={handleSelect}>
-                        <Button className={fixtureCardStyles.button}>Gameweek {selectedGw}</Button> {/*selectedGw needs to match the gameweek currently assigned to the match*/}
+                        <Button className={fixtureCardStyles.button}>Gameweek {selectedGw}</Button>
                         <Dropdown.Toggle split className={fixtureCardStyles.button} id="dropdown-split-basic" />
                         <Dropdown.Menu className={fixtureCardStyles.dropdownMenu}>
                             {gwOptions.map((gw, i) => <Dropdown.Item className={fixtureCardStyles.dropdownItem} key={i} eventKey={gw}>{gw}</Dropdown.Item>)}

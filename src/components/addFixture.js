@@ -120,7 +120,7 @@ const AddFixture = () => {
                         {confirmButton}
                         {rounds.map(({ matches }, index) => (
                             <div className='fixtureCardList' key={index}>
-                                {matches.map((match, index) => <FixtureCard key={index} match={match} setChangedGWArray={setChangedGWArray}/>)}
+                                {matches.map((match, index) => <FixtureCard key={index} gwValue={gwCounter} match={match} setChangedGWArray={setChangedGWArray}/>)}
                             </div>
                         ))}     
                         {confirmButton}                     
