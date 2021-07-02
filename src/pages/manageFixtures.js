@@ -7,7 +7,6 @@ const ManageFixtures = () => {
   return (
       <Layout>
         <div>
-          <h1>Add new teams here</h1>
           <AddFixture/>
         </div>
       </Layout>

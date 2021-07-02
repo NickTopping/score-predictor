@@ -5,18 +5,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import FixtureCard from "./fixtureCard";
 import GWSelector from "./gwSelector";
 
-//Update single GW
-async function updateGameweek(newGW, fixtureId) {
-
-    const fixtureArray = await fetch("http://localhost:9000/updateGameweek/" + newGW + "/" + fixtureId)
-        .then(response => response);
-
-    console.log("This log won't run until the await for updateGameweek() has finished");
-    console.log(fixtureArray);    
-}
-
 //Update multiple GWs
-async function updateGameweek2(gwUpdateArray) {
+async function updateGameweeks(gwUpdateArray) {
 
     console.log("CHANGED GWs: ", gwUpdateArray);
 
@@ -28,10 +18,10 @@ async function updateGameweek2(gwUpdateArray) {
         })
     };
 
-    const fixtureArray = await fetch("http://localhost:9000/updateGameweek2", requestOptions)
+    const fixtureArray = await fetch("http://localhost:9000/updateGameweeks", requestOptions)
         .then(response => response);
 
-    console.log("This log won't run until the await for updateGameweek2() has finished");
+    console.log("This log won't run until the await for updateGameweeks() has finished");
     console.log(fixtureArray);    
 }
 
@@ -46,8 +36,6 @@ async function generateFixtures() {
 
 const AddFixture = () => {
 
-    const [newGameweek, setNewGameweek] = useState('');
-    const [fixtureID, setFixtureID] = useState('');
     const [allFixtures, setAllFixtures] = useState([]);
     const [filteredFixturesState, setFilteredFixturesState] = useState([]);
     const [gwCounter, setGwCounter] = useState(0);
@@ -63,7 +51,7 @@ const AddFixture = () => {
         //Use instead: allFixturesCopy = [...allFixtures]; DOESN'T WORK?
         var allFixturesCopy = JSON.parse(JSON.stringify(allFixtures)); //NEEDED DEEP COPY OF ALLFIXTURES ARRAY, OTHERWISE REFERENCE WILL MAKE ORIGINAL ARRAY CHANGE ITS STATE AS WELL
         var filteredFixtures = allFixtures[0].rounds.filter(function(round) {
-            return round.gw === counter; //why is gwCounter not up to date by this point?
+            return round.gw === counter;
         });
 
         allFixturesCopy[0].rounds = filteredFixtures; //Only pass rounds that fall under selected gw counter
@@ -88,9 +76,15 @@ const AddFixture = () => {
         }        
     }, [allFixtures]); //Dependancy array - called when allFixtures changes (only happens once)
 
+    const refreshPage = () => {
+        window.location.reload();
+        //Can do better than this, need to call setAllFixtures() somehow to set allFixtures state to updated values
+        //Find a way to call getGWCounter(gwCounter) so that the current GW refreshes, rather than defaulting to GW0 (useState defaults to 0 on page load)
+    }
+
     let confirmButton;
     if (changedGWArray.length > 0) {
-        confirmButton = <Button className={addFixtureStyles.btnConfirm} onClick={() => updateGameweek2(changedGWArray)}>Confirm Gameweek Changes</Button>
+        confirmButton = <Button className={addFixtureStyles.btnConfirm} onClick={() => {updateGameweeks(changedGWArray); refreshPage();}}>Confirm Gameweek Changes</Button>
     } 
     else {
         confirmButton = null;
@@ -101,17 +95,6 @@ const AddFixture = () => {
             <div className={addFixtureStyles.sectionSpacing}>              
                 <Button id='btnGenerateFixtureList' className={addFixtureStyles.button} onClick={() => generateFixtures()}>Generate Fixtures</Button>               
             </div>  
-            <div className={addFixtureStyles.sectionSpacing}>
-                <label>
-                    New Gameweek:
-                    <input type="text" className="form-control" id="newGW" onChange={event => setNewGameweek(event.target.value)}></input>
-                </label>          
-                <label>
-                    FixtureId:
-                    <input type="text" className="form-control" id="fixture" onChange={event => setFixtureID(event.target.value)}></input>
-                </label>                     
-                <Button id='btnUpdateGameweek' className={addFixtureStyles.button} onClick={() => updateGameweek(newGameweek, fixtureID)}>Update Gameweek</Button>
-            </div>
             <GWSelector gwCounter = {gwCounter} callback = {getGWCounter}/>
             {filteredFixturesState.length ? (
                 filteredFixturesState.map(({ name, rounds }, index) => (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import fixtureCardStyles from './fixtureCard.module.scss'
 import gwSelectorStyles from './gwSelector.module.scss'
 import Button from 'react-bootstrap/Button';

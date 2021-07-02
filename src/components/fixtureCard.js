@@ -52,7 +52,7 @@ const FixtureCard = ({gwValue, match, setChangedGWArray}) => {
                     <div className={fixtureCardStyles.teamsText}>{match.awayTeamName}</div>                          
                 </div> 
                 <div className={fixtureCardStyles.dropdownFull}>
-                    <Dropdown as={ButtonGroup} onSelect={handleSelect}>
+                    <Dropdown className={fixtureCardStyles.dropdownCollapsed} as={ButtonGroup} onSelect={handleSelect}>
                         <Button className={fixtureCardStyles.button}>Gameweek {selectedGw}</Button>
                         <Dropdown.Toggle split className={fixtureCardStyles.button} id="dropdown-split-basic" />
                         <Dropdown.Menu className={fixtureCardStyles.dropdownMenu}>

@@ -22,6 +22,10 @@
 .dropdownMenu {
     transform: translate(0px, 40px) !important;
     min-width: 100% !important;
+    border: 2px solid #6d41b5;
+    border-radius: 0.25rem;
+    overflow-y: scroll;
+    height: 200px; 
 }
 
 .dropdownItem {
@@ -43,4 +47,8 @@
 
 .dropdownFull {
     margin-left: auto;
+}
+
+.dropdownCollapsed {
+    width: 160px;
 }
