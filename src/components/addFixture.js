@@ -18,11 +18,7 @@ async function updateGameweeks(gwUpdateArray) {
         })
     };
 
-    const fixtureArray = await fetch("http://localhost:9000/updateGameweeks", requestOptions)
-        .then(response => response);
-
-    console.log("This log won't run until the await for updateGameweeks() has finished");
-    console.log(fixtureArray);    
+    await fetch("http://localhost:9000/updateGameweeks", requestOptions);
 }
 
 async function generateFixtures() {
@@ -40,6 +36,7 @@ const AddFixture = () => {
     const [filteredFixturesState, setFilteredFixturesState] = useState([]);
     const [gwCounter, setGwCounter] = useState(0);
     const [changedGWArray, setChangedGWArray] = useState([]);
+    const [isLoadingFixtures, setIsLoadingFixtures] = useState(false);
 
     const getAllFixtures = async() => { //Can't await function unless it's async
         return fetch('http://localhost:9000/getAllFixtures')       
@@ -60,31 +57,37 @@ const AddFixture = () => {
 
     //First mount (ran once)
     useEffect(() => {
-        async function fetchData() {
-           await getAllFixtures() //Because we use await here, its containing function has to be async
-           .then(response => response.json())
-            .then(data => {
-                setAllFixtures(data)
-            });
-        } 
-        fetchData();
+        setIsLoadingFixtures(true)
     }, []);
 
     useEffect(() => {
+        if(isLoadingFixtures) {
+            async function fetchData() {
+                await getAllFixtures() //Because we use await here, its containing function has to be async
+                .then(response => response.json())
+                    .then(data => {
+                        setAllFixtures(data)
+                        setIsLoadingFixtures(false)
+                    });
+            } 
+            fetchData();
+        }
+    }, [isLoadingFixtures]); //Dependency on if isLoadingFixtures - if the bool value changes, run useEffect to retrieve all fixtures
+
+    useEffect(() => {     
         if (allFixtures.length) {
             getGWCounter(0);
         }        
     }, [allFixtures]); //Dependancy array - called when allFixtures changes (only happens once)
 
-    const refreshPage = () => {
-        window.location.reload();
-        //Can do better than this, need to call setAllFixtures() somehow to set allFixtures state to updated values
-        //Find a way to call getGWCounter(gwCounter) so that the current GW refreshes, rather than defaulting to GW0 (useState defaults to 0 on page load)
+    const onConfirmClick = async (changedGWArray) => {
+        setIsLoadingFixtures(true);
+        await updateGameweeks(changedGWArray);
     }
 
     let confirmButton;
     if (changedGWArray.length > 0) {
-        confirmButton = <Button className={addFixtureStyles.btnConfirm} onClick={() => {updateGameweeks(changedGWArray); refreshPage();}}>Confirm Gameweek Changes</Button>
+        confirmButton = <Button className={addFixtureStyles.btnConfirm} onClick={() => onConfirmClick(changedGWArray)}>Confirm Gameweek Changes</Button>
     } 
     else {
         confirmButton = null;

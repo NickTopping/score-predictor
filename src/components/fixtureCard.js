@@ -13,15 +13,16 @@ for (var i = 0; i <= 38; i++) {
 }
 
 const FixtureCard = ({gwValue, match, setChangedGWArray}) => {
-
+    
     const [selectedGw, setSelectedGw] = useState(gwValue);
 
     useEffect(() => {
+        //console.log(26, gwValue);
         setSelectedGw(gwValue);       
     }, [gwValue]);
 
     const handleSelect = (newDropdownValue) => {
-        
+        //console.log(27, newDropdownValue);
         setSelectedGw(newDropdownValue);
         
         //if array already contains fixtureId, update
@@ -52,11 +53,13 @@ const FixtureCard = ({gwValue, match, setChangedGWArray}) => {
                     <div className={fixtureCardStyles.teamsText}>{match.awayTeamName}</div>                          
                 </div> 
                 <div className={fixtureCardStyles.dropdownFull}>
+                    {/* <p>Selected {selectedGw}</p>
+                    <p>GW Value {gwValue}</p> */}
                     <Dropdown className={fixtureCardStyles.dropdownCollapsed} as={ButtonGroup} onSelect={handleSelect}>
                         <Button className={fixtureCardStyles.button}>Gameweek {selectedGw}</Button>
                         <Dropdown.Toggle split className={fixtureCardStyles.button} id="dropdown-split-basic" />
                         <Dropdown.Menu className={fixtureCardStyles.dropdownMenu}>
-                            {gwOptions.map((gw, i) => <Dropdown.Item className={fixtureCardStyles.dropdownItem} key={i} eventKey={gw}>{gw}</Dropdown.Item>)}
+                            {gwOptions.map(gw => <Dropdown.Item className={fixtureCardStyles.dropdownItem} key={gw} eventKey={gw}>{gw}</Dropdown.Item>)}
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>                 
