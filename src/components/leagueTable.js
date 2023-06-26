@@ -18,6 +18,7 @@ export default function SetLeagueTable() {
     <Table singleLine>
         <thead>
           <tr>
+            <th className={tableStyles.tableHeader}></th>
             <th className={tableStyles.tableHeader}>Team</th>
             <th className={tableStyles.tableHeader}>P</th>
             <th className={tableStyles.tableHeader}>W</th>
@@ -34,6 +35,7 @@ export default function SetLeagueTable() {
           {tableData.map(el => {
             return (
               <tr key={el.teamId}>
+                <td className={tableStyles.row}>{tableData.indexOf(el) + 1}</td>
                 <td className={tableStyles.row}>{el.teamName}</td>
                 <td className={tableStyles.row}>{el.played}</td>
                 <td className={tableStyles.row}>{el.wins}</td>

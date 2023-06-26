@@ -81,8 +81,12 @@ const AddFixture = () => {
     }, [allFixtures]); //Dependancy array - called when allFixtures changes (only happens once)
 
     const onConfirmClick = async (changedGWArray) => {
+        
         setIsLoadingFixtures(true);
         await updateGameweeks(changedGWArray);
+
+        //Empty changedGWArray after confirm click (hides button)
+        setChangedGWArray([]); //Doesn't clear in console logs?
     }
 
     let confirmButton;

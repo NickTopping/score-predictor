@@ -8,8 +8,7 @@ const ScorePredictionsPage = () => {
   return (
       <Layout>
         <div>
-          <h1>Score predictions here</h1>
-          <ScoresTestTemp/>
+          {/* <ScoresTestTemp/> */}
           <LeagueTableShifts/>
         </div>
       </Layout>

@@ -28,7 +28,7 @@ const FixtureCard = ({gwValue, match, setChangedGWArray}) => {
         //if array already contains fixtureId, update
         if (newGWArray.some(newDropdownValue => newDropdownValue.fixtureId === match.fixtureId)) {          
             var fixtureIndex = newGWArray.findIndex((obj => obj.fixtureId === match.fixtureId));
-            newGWArray[fixtureIndex].newGW = newDropdownValue;
+            newGWArray[fixtureIndex].gw = newDropdownValue;
         }
         //else, add new fixtureId to array
         else {

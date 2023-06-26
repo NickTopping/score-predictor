@@ -8,6 +8,11 @@ const GWSelector = ({gwCounter, callback}) => {
 
     const maxGW = 38;
     const minGW = 0;
+    let selectedGWTitle;
+
+    gwCounter > 0 ? (
+        selectedGWTitle = `Gameweek ${gwCounter}`
+    ): selectedGWTitle = 'Gameweek unassigned'
 
     function changeCounter(changeBy) {
         
@@ -26,7 +31,7 @@ const GWSelector = ({gwCounter, callback}) => {
     return (
             <div className={gwSelectorStyles.gwCounter}>
                 <Button className={fixtureCardStyles.button} onClick={()=> changeCounter(-1)}>&lt;</Button>
-                <div className={gwSelectorStyles.gwCounterSpacing}>Gameweek {gwCounter}</div>
+                    <div className={gwSelectorStyles.gwCounterSpacing}>{selectedGWTitle}</div>                
                 <Button className={fixtureCardStyles.button} onClick={()=> changeCounter(+1)}>&gt;</Button>
             </div>          
     )

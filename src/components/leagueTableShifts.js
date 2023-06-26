@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react"; //useState is a hook, manage
 import Table from 'react-bootstrap/Table'
 import 'bootstrap/dist/css/bootstrap.css';
 import tableStyles from "./leagueTable.module.scss"
+import TeamScorePredictions from "../components/teamScorePredictions"
 
 export default function SetLeagueTable() {
 
   const [tableData, setTableData] = useState([]);
+  const [selectedTeamId, setSelectedTeamId] = useState(0);
+  const [inHover, setHover] = useState(null);
   const url = "http://localhost:9000/getLeagueTable";
 
   var tablePositionArray = [];
@@ -29,7 +32,18 @@ export default function SetLeagueTable() {
     }
   }
 
-  const getStyles = (minPos, maxPos, td) => {
+  let showTeamScorePredictions = selectedTeamId > 0 ? true : false;
+  let teamScorePredictions;
+  if (showTeamScorePredictions) {
+    //for each match in in tableData, where one team = selected teamId, generate a list of fixtures 
+    //call getAllFixtures()?
+    teamScorePredictions = <TeamScorePredictions teamId = {selectedTeamId} callback = {setSelectedTeamId}/> //get clicked teamId
+  } 
+  else {
+    teamScorePredictions = null;
+  }
+
+  const getTableStyles = (minPos, maxPos, td) => {
 
     let styles = `${tableStyles.rowBorderless} ${tableStyles.column}`; 
  
@@ -47,38 +61,54 @@ export default function SetLeagueTable() {
     
     return styles;
   }
+
+  const hoverStyles = (index) => {
+
+    let styles = `${tableStyles.rowBorderless} ${tableStyles.pointer}`; 
+
+    if (index === inHover) {
+      styles += ` ${tableStyles.rowHovered}`;
+    }
+
+    return styles;
+  }
   
   const getTeamRow = (team, index, tableData) => {
 
     let positionShifts = getMinAndMaxPositions(team, tableData);
-    console.log(positionShifts);
+    //console.log(positionShifts);
+    console.log(team);
+    console.log(tableData);
 
     return (
-      <tr id={'teamRow' + (index + 1)} key={team.teamId}>
-        <td className={tableStyles.rowBorderless}>{index + 1}</td>
-        <td className={tableStyles.rowBorderless}>{team.teamName}</td>                       
+      <tr id={'teamRow' + (index + 1)} key={team.teamId} onMouseEnter={() => setHover(index)} onMouseLeave={() => setHover(null)}>
+        <td className={hoverStyles(index)} onClick={() => { setSelectedTeamId(team.teamId) }}>{index + 1}</td>
+        <td className={hoverStyles(index)} onClick={() => { setSelectedTeamId(team.teamId) }}>{team.teamName}</td>                       
 
         {tablePositionArray.map((td) => {
-          return <td id={'posCol' + td} className={getStyles(positionShifts.minPos, positionShifts.maxPos, td)} key={td}></td>                               
+          return <td id={'posCol' + td} className={getTableStyles(positionShifts.minPos, positionShifts.maxPos, td)} key={td}></td>                               
         })}                          
       </tr>
     );
   }
 
   return (
-    <Table singleLine className={tableStyles.leagueTableShift}>
-        <thead>
-          <tr>
-            <th className={tableStyles.tableHeader}>Position</th>
-            <th className={tableStyles.tableHeader}>Team</th>
-            {tablePositionArray.map((pos, i) => <th className={tableStyles.tableHeader} key={i}>{pos}</th>)}           
-          </tr>
-        </thead>
+    <div>
+      {teamScorePredictions}
+      <Table singleLine className={tableStyles.leagueTableShift}>
+          <thead>
+            <tr>
+              <th className={tableStyles.tableHeader}>Position</th>
+              <th className={tableStyles.tableHeader}>Team</th>
+              {tablePositionArray.map((pos, i) => <th className={tableStyles.tableHeader} key={i}>{pos}</th>)}           
+            </tr>
+          </thead>
 
-        <tbody>
-          {tableData.map((team, index) => getTeamRow(team, index, tableData))}
-        </tbody>
-    </Table>
+          <tbody>
+            {tableData.map((team, index) => getTeamRow(team, index, tableData))} {/*tableData passed in each time, could just pass index of tableData for given team */}
+          </tbody>
+      </Table>
+    </div>
   )
 }
 
@@ -100,13 +130,13 @@ function getMinAndMaxPositions(currentTeam, tableData) {
       if (currentTeam.points <= compareTeam.maxPoints){
         //eg Arsenal have higher min points than Brentford's max points          
         minCounter++;
-        console.log(`getMin1*****${currentTeam.teamName}: ${currentTeam.points} <= ${compareTeam.teamName}: ${compareTeam.maxPoints}*****`); 
+        //console.log(`getMin1*****${currentTeam.teamName}: ${currentTeam.points} <= ${compareTeam.teamName}: ${compareTeam.maxPoints}*****`); 
       }
 
       if (currentTeam.maxPoints >= compareTeam.points){
         //eg Sheffield United's counter finishes on 3, as there a 3 teams that can potentially finish below them          
         maxCounter--;
-        console.log(`getMax1*****${currentTeam.teamName}: ${currentTeam.maxPoints} <= ${compareTeam.teamName}: ${compareTeam.points}*****`);
+        //console.log(`getMax1*****${currentTeam.teamName}: ${currentTeam.maxPoints} <= ${compareTeam.teamName}: ${compareTeam.points}*****`);
       }
     }
   }
@@ -125,8 +155,12 @@ function getMaxAvailablePoints(team) {
   let maxAvailablePoints = gamesRemaining * 3;
   let maxTotalPoints = team.points + maxAvailablePoints;
 
-  console.log(team);
-  console.log("Max Possible Total Points: " + maxTotalPoints);
+  //console.log(team);
+  //console.log("Max Possible Total Points: " + maxTotalPoints);
 
   return maxTotalPoints;
+}
+
+function handleRowClick(teamId) {
+  console.log("teamId: " + teamId);
 }
