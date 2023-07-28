@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"; //useState is a hook, manage
 import Table from 'react-bootstrap/Table'
 import 'bootstrap/dist/css/bootstrap.css';
 import tableStyles from "./leagueTable.module.scss"
+import fixtureCardStyles from './fixtureCard.module.scss'
 import TeamScorePredictions from "../components/teamScorePredictions"
 
 export default function SetLeagueTable() {
@@ -9,7 +10,7 @@ export default function SetLeagueTable() {
   const [tableData, setTableData] = useState([]);
   const [selectedTeamId, setSelectedTeamId] = useState(0);
   const [inHover, setHover] = useState(null);
-  const url = "http://localhost:9000/getLeagueTable";
+  const [allFixtures, setAllFixtures] = useState([]);
 
   var tablePositionArray = [];
 
@@ -18,9 +19,15 @@ export default function SetLeagueTable() {
   }
 
   useEffect(() => {
-      fetch(url)
+      fetch("http://localhost:9000/getLeagueTable")
         .then(response => response.json())
         .then(data => setTableData(data));
+  }, []);
+
+  useEffect(() => {
+    fetch('http://localhost:9000/getAllFixtures')
+      .then(response => response.json())
+      .then(data => setAllFixtures(data));
   }, []);
 
   //Iterate through each team and calculate their max possible points
@@ -34,10 +41,10 @@ export default function SetLeagueTable() {
 
   let showTeamScorePredictions = selectedTeamId > 0 ? true : false;
   let teamScorePredictions;
+  
   if (showTeamScorePredictions) {
-    //for each match in in tableData, where one team = selected teamId, generate a list of fixtures 
-    //call getAllFixtures()?
-    teamScorePredictions = <TeamScorePredictions teamId = {selectedTeamId} callback = {setSelectedTeamId}/> //get clicked teamId
+    let filteredFixtures = filterFixturesByTeamId(allFixtures, selectedTeamId);
+    teamScorePredictions = <TeamScorePredictions teamFixtures = {filteredFixtures} teamId = {selectedTeamId} callback = {setSelectedTeamId}/> //get clicked teamId - BUG: CURRRENTLY TRIGGERS ON HOVER???
   } 
   else {
     teamScorePredictions = null;
@@ -77,8 +84,8 @@ export default function SetLeagueTable() {
 
     let positionShifts = getMinAndMaxPositions(team, tableData);
     //console.log(positionShifts);
-    console.log(team);
-    console.log(tableData);
+    //console.log(team);
+    //console.log(tableData);
 
     return (
       <tr id={'teamRow' + (index + 1)} key={team.teamId} onMouseEnter={() => setHover(index)} onMouseLeave={() => setHover(null)}>
@@ -93,7 +100,7 @@ export default function SetLeagueTable() {
   }
 
   return (
-    <div>
+    <div className={fixtureCardStyles.openSelectedTeam}>
       {teamScorePredictions}
       <Table singleLine className={tableStyles.leagueTableShift}>
           <thead>
@@ -161,6 +168,37 @@ function getMaxAvailablePoints(team) {
   return maxTotalPoints;
 }
 
-function handleRowClick(teamId) {
-  console.log("teamId: " + teamId);
+// function handleRowClick(teamId) {
+//   console.log("teamId: " + teamId);
+// }
+
+function filterFixturesByTeamId(allFixtures, selectedTeamId) {
+
+  let filteredFixtures = [];
+  let rounds = allFixtures[0].rounds;
+  
+  //Iterate through rounds
+  rounds.filter((roundDetails) => {
+    
+    let matchArray = [];
+    
+    //Iterate through each match within a round
+    roundDetails.matches.filter((match) => {  
+        if (match.homeTeamId == selectedTeamId || match.awayTeamId == selectedTeamId) {
+          matchArray.push(match);
+        }  	
+    });
+
+    if (matchArray.length > 0) {
+      filteredFixtures.push({
+        gw: roundDetails.gw, 
+        matches: matchArray
+      });
+    }
+
+  });
+
+  console.log('ff', filteredFixtures);
+
+  return filteredFixtures;
 }
